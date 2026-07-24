@@ -1,0 +1,78 @@
+server:
+  port: ${SERVER_PORT:48090}
+  servlet:
+    context-path: /api
+
+spring:
+  application:
+    name: planning-platform
+  datasource:
+    url: ${DB_URL:jdbc:mysql://127.0.0.1:3306/planning-platform?createDatabaseIfNotExist=true&useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true}
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:123456}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  data:
+    redis:
+      host: ${REDIS_HOST:127.0.0.1}
+      port: ${REDIS_PORT:6379}
+      database: ${REDIS_DATABASE:1}
+      password: ${REDIS_PASSWORD:}
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 22MB
+  sql:
+    init:
+      mode: ${SQL_INIT_MODE:always}
+      encoding: UTF-8
+      schema-locations: classpath:db/mysql/00-init.sql
+
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+  global-config:
+    db-config:
+      logic-delete-field: deleted
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+
+logging:
+  level:
+    root: ${LOG_LEVEL_ROOT:INFO}
+    org.springframework: ${LOG_LEVEL_SPRING:INFO}
+    org.springframework.web: DEBUG
+    com.planning.platform: ${LOG_LEVEL_APP:INFO}
+
+planning:
+  security:
+    jwt-secret: ${JWT_SECRET:planning-platform-change-me-please-change-me-20260710}
+    access-token-minutes: ${ACCESS_TOKEN_MINUTES:120}
+    refresh-token-days: ${REFRESH_TOKEN_DAYS:7}
+  bootstrap:
+    admin-username: ${ADMIN_USERNAME:admin}
+    admin-password: ${ADMIN_PASSWORD:Admin@123456}
+  demo-data:
+    enabled: ${DEMO_DATA_ENABLED:true}
+  storage:
+    upload-root: ${UPLOAD_ROOT:uploads/employee-results}
+    export-root: ${EXPORT_ROOT:exports}
+  export:
+    cleanup-cron: ${EXPORT_CLEANUP_CRON:0 20 3 * * *}
+    processing-timeout-minutes: ${EXPORT_PROCESSING_TIMEOUT_MINUTES:30}
+    recovery-delay-ms: ${EXPORT_RECOVERY_DELAY_MS:60000}
+    recovery-initial-delay-ms: ${EXPORT_RECOVERY_INITIAL_DELAY_MS:60000}
+  audit:
+    retain-days: ${AUDIT_RETAIN_DAYS:90}
+    cleanup-cron: ${AUDIT_CLEANUP_CRON:0 40 3 * * *}
+  ai:
+    encryption-key: ${AI_CONFIG_ENCRYPTION_KEY:planning-ai-development-key-change-in-production}
+    enabled: ${AI_ENABLED:false}
+    provider: ${AI_PROVIDER:qwen}
+    api-key: ${QWEN_API_KEY:}
+    base-url: ${QWEN_BASE_URL:https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions}
+    model: ${QWEN_MODEL:qwen3.7-plus}
+    prompt-version: ${AI_PROMPT_VERSION:v10-calibrated-grounded}
+    thinking-enabled: ${QWEN_ENABLE_THINKING:false}
+    max-output-tokens: ${QWEN_MAX_OUTPUT_TOKENS:1600}
+    request-timeout-seconds: ${AI_REQUEST_TIMEOUT_SECONDS:60}
+    max-evidence-characters: ${AI_MAX_EVIDENCE_CHARACTERS:30000}

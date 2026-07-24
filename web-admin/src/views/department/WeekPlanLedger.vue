@@ -1,0 +1,19 @@
+<template>
+  <section class="page-panel">
+    <div class="page-header"><div><h1 class="page-title">周计划台账</h1><p class="page-subtitle">只读查看直属领导已经处理完成的周计划和审批结果。</p></div><el-button :loading="loading" @click="loadRows">刷新</el-button></div>
+    <el-alert class="mt16" type="info" :closable="false" show-icon title="本页面不参与二次审批；待审批周计划不会展示。" />
+    <div class="filter-bar mt16"><el-select v-model="status" clearable placeholder="全部审批结果"><el-option label="已通过" value="APPROVED" /><el-option label="已驳回" value="REJECTED" /></el-select><el-date-picker v-model="weekStart" type="date" value-format="YYYY-MM-DD" clearable placeholder="按周一筛选" /><el-button @click="loadRows">查询</el-button></div>
+    <el-table v-loading="loading" class="mt16" :data="rows" border empty-text="暂无已处理周计划"><el-table-column prop="employeeName" label="员工" width="110" /><el-table-column prop="departmentName" label="组织" min-width="150" /><el-table-column prop="weekStart" label="周开始" width="120" /><el-table-column prop="weekEnd" label="周结束" width="120" /><el-table-column prop="itemCount" label="条目" width="70" /><el-table-column label="审批结果" width="110"><template #default="{ row }"><el-tag :type="statusMeta(row.status).type">{{ statusMeta(row.status).label }}</el-tag></template></el-table-column><el-table-column prop="approvalComment" label="直属领导意见" min-width="220" show-overflow-tooltip /><el-table-column prop="approveAt" label="审批时间" width="170" /><el-table-column label="操作" width="90"><template #default="{ row }"><el-button link type="primary" @click="open(row)">查看</el-button></template></el-table-column></el-table>
+    <el-drawer v-model="drawer" title="周计划审批结果" size="720px"><template v-if="detail"><el-descriptions :column="2" border><el-descriptions-item label="员工">{{ detail.summary.employeeName }}</el-descriptions-item><el-descriptions-item label="组织">{{ detail.summary.departmentName }}</el-descriptions-item><el-descriptions-item label="自然周">{{ detail.summary.weekStart }} 至 {{ detail.summary.weekEnd }}</el-descriptions-item><el-descriptions-item label="审批结果"><el-tag :type="weekPlanStatusMeta[detail.summary.status].type">{{ weekPlanStatusMeta[detail.summary.status].label }}</el-tag></el-descriptions-item><el-descriptions-item label="直属领导意见" :span="2">{{ detail.summary.approvalComment || '无' }}</el-descriptions-item></el-descriptions><el-table class="mt16" :data="detail.items" border><el-table-column label="父级月计划" min-width="200"><template #default="{ row }">{{ row.parent?.planMonth }} · {{ row.parent?.taskName }}</template></el-table-column><el-table-column prop="content" label="本周工作" min-width="240" /><el-table-column prop="deliverable" label="交付物" min-width="150" /><el-table-column prop="plannedFinishDate" label="完成日期" width="120" /></el-table></template></el-drawer>
+  </section>
+</template>
+<script setup lang="ts">
+import { onMounted, ref } from 'vue'
+import { ElMessage } from 'element-plus'
+import { getDepartmentWeekPlanApi, listDepartmentWeekPlansApi, weekPlanStatusMeta, type WeekPlanDetail, type WeekPlanStatus, type WeekPlanSummary } from '@/api/weekPlan'
+const loading = ref(false); const rows = ref<WeekPlanSummary[]>([]); const status = ref(''); const weekStart = ref(''); const drawer = ref(false); const detail = ref<WeekPlanDetail | null>(null)
+function statusMeta(value: WeekPlanStatus) { return weekPlanStatusMeta[value] }
+async function loadRows() { loading.value = true; try { rows.value = await listDepartmentWeekPlansApi({ status: status.value as 'APPROVED' | 'REJECTED' | '', weekStart: weekStart.value || undefined }) } catch (e) { ElMessage.error(e instanceof Error ? e.message : '周计划台账加载失败') } finally { loading.value = false } }
+async function open(row: WeekPlanSummary) { try { detail.value = await getDepartmentWeekPlanApi(row.id); drawer.value = true } catch (e) { ElMessage.error(e instanceof Error ? e.message : '详情加载失败') } }
+onMounted(loadRows)
+</script>

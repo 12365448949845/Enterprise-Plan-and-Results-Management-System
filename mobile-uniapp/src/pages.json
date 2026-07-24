@@ -1,0 +1,28 @@
+{
+  "pages": [
+    {
+      "path": "pages/login/index",
+      "style": {
+        "navigationBarTitleText": "登录"
+      }
+    },
+    {
+      "path": "pages/index/index",
+      "style": {
+        "navigationBarTitleText": "成果计划"
+      }
+    },
+    {
+      "path": "pages/day/index",
+      "style": {
+        "navigationBarTitleText": "日计划"
+      }
+    },
+    {
+      "path": "pages/result/index",
+      "style": {
+        "navigationBarTitleText": "成果提交"
+      }
+    }
+  ]
+}

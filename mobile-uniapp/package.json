@@ -1,0 +1,35 @@
+{
+  "name": "planning-platform-mobile",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "postinstall": "node scripts/patch-uni-cli.cjs",
+    "dev:h5": "vite --host 0.0.0.0 --port 5182",
+    "dev:mp-weixin": "vite build --mode mp-weixin",
+    "dev:app": "vite build --mode app",
+    "build:h5": "vite build --mode h5",
+    "build:mp-weixin": "vite build --mode mp-weixin",
+    "build:app": "vite build --mode app"
+  },
+  "dependencies": {
+    "@dcloudio/uni-app": "3.0.0-5010520260709001",
+    "@dcloudio/uni-app-plus": "3.0.0-5010520260709001",
+    "@dcloudio/uni-components": "3.0.0-5010520260709001",
+    "@dcloudio/uni-h5": "3.0.0-5010520260709001",
+    "@dcloudio/uni-mp-weixin": "3.0.0-5010520260709001",
+    "@dcloudio/uni-shared": "3.0.0-5010520260709002",
+    "@wot-ui/ui": "^2.0.8",
+    "pinia": "^2.3.0",
+    "vue": "^3.5.13"
+  },
+  "devDependencies": {
+    "@dcloudio/vite-plugin-uni": "3.0.0-5010520260709001",
+    "typescript": "^5.7.2",
+    "vite": "5.2.8",
+    "vue-tsc": "^2.2.0"
+  },
+  "overrides": {
+    "@dcloudio/uni-shared": "3.0.0-5010520260709002"
+  }
+}

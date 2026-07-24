@@ -1,0 +1,41 @@
+server:
+  forward-headers-strategy: framework
+  error:
+    include-message: never
+    include-binding-errors: never
+    include-stacktrace: never
+
+spring:
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT:6379}
+      database: ${REDIS_DATABASE:1}
+      password: ${REDIS_PASSWORD:}
+  sql:
+    init:
+      mode: never
+
+planning:
+  security:
+    jwt-secret: ${JWT_SECRET}
+  bootstrap:
+    admin-username: ${ADMIN_USERNAME}
+    admin-password: ${ADMIN_PASSWORD}
+  demo-data:
+    enabled: false
+  storage:
+    upload-root: ${UPLOAD_ROOT}
+    export-root: ${EXPORT_ROOT}
+  ai:
+    encryption-key: ${AI_CONFIG_ENCRYPTION_KEY}
+
+logging:
+  level:
+    root: ${LOG_LEVEL_ROOT:INFO}
+    org.springframework: WARN
+    com.planning.platform: ${LOG_LEVEL_APP:INFO}
